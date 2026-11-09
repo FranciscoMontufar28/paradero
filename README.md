@@ -1,0 +1,1 @@
+Screenshots for croma-labs/paradero PR "fix/riders-arrivals-search-privacy". Taken from web exports of main and the PR branch against a local stand-in for the Croma API built from TransMilenio GTFS. Not meant to be merged.
