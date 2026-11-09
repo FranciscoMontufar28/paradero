@@ -3,6 +3,8 @@ import Animated from "react-native-reanimated";
 
 import { useLargeText } from "@/lib/accessibility";
 import { punctuality, spokenArrival } from "@/lib/format";
+import { useNow } from "@/lib/tick";
+import { minutesLeft } from "@/transit/time";
 import { signal, usePalette } from "@/theme/colors";
 import { motion } from "@/theme/motion";
 import { space } from "@/theme/tokens";
@@ -27,6 +29,7 @@ export function Pace({ arrival }: { arrival: Arrival }) {
 }
 
 export function ArrivalRow({ arrival, first, index = 0 }: { arrival: Arrival; first?: boolean; index?: number }) {
+  const now = useNow(15_000);
   const p = usePalette();
   const large = useLargeText();
   return (
@@ -34,7 +37,7 @@ export function ArrivalRow({ arrival, first, index = 0 }: { arrival: Arrival; fi
       entering={motion.appear(Math.min(index, 8) * 40)}
       layout={motion.layout}
       accessible
-      accessibilityLabel={spokenArrival(arrival)}
+      accessibilityLabel={spokenArrival(arrival, now)}
       style={[styles.row, large && styles.stack, !first && { borderTopColor: p.separator, borderTopWidth: StyleSheet.hairlineWidth }]}>
       <View style={styles.body}>
         <RouteBadge code={arrival.code} system={arrival.system} size="sm" />
@@ -43,7 +46,7 @@ export function ArrivalRow({ arrival, first, index = 0 }: { arrival: Arrival; fi
         </Text>
         <Pace arrival={arrival} />
       </View>
-      <Minutes value={arrival.minutes} />
+      <Minutes value={minutesLeft(arrival, now)} />
     </Animated.View>
   );
 }
