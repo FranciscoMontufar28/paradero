@@ -97,6 +97,8 @@ export interface RouteDetail {
   };
   path: [number, number][];
   stops: { id: string; name: string; lat: number; lon: number }[];
+  /** Every direction riders can take under this code, sorted by destination. TransMilenio files each one as its own route. */
+  directions: { id: string; name: string }[];
   buses: Bus[];
   alerts: Alert[];
 }
