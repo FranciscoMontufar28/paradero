@@ -11,6 +11,10 @@ test("hides cédulas and phones however riders write them", () => {
   assert.equal(scrub("+57 300-123-4567"), "[teléfono oculto]");
   assert.equal(scrub("fijo 601 234 5678"), "fijo [teléfono oculto]");
   assert.equal(scrub("correo ana.perez@gmail.com"), "correo [correo oculto]");
+  // Pasted from a contacts app or a chat, with non-breaking spaces; two spaces; a dash with spaces around it.
+  assert.equal(scrub("mi número 300\u00a0123\u00a04567"), "mi número [teléfono oculto]");
+  assert.equal(scrub("al 300  123  4567"), "al [teléfono oculto]");
+  assert.equal(scrub("al 300 - 123 - 45 - 67"), "al [teléfono oculto]");
 });
 
 test("leaves addresses, route codes, bus numbers and times alone", () => {

@@ -23,12 +23,13 @@ const PHONE = /^(57)?(3\d{9}|60\d{7,8})$/;
 
 /**
  * Reports are public, so anything that looks like a way to reach a person is removed before it leaves the server.
- * Numbers are matched as people type them: "300 123 45 67", "+57 300-123-4567", a cédula as "1.023.456.789".
+ * Numbers are matched as people type them: "300 123 45 67", "+57 300-123-4567", "300 - 123 - 45 - 67", a cédula as "1.023.456.789".
+ * Up to three spaces (non-breaking ones too, as contacts apps paste them), dots or dashes may sit between two digits.
  */
 export function scrub(text: string): string {
   return text
     .replace(/[\w.+-]+@[\w-]+\.[\w.-]+/g, "[correo oculto]")
-    .replace(/\+?\d(?:[ .-]?\d){5,}/g, (run) => (PHONE.test(run.replace(/\D/g, "")) ? "[teléfono oculto]" : "[número oculto]"));
+    .replace(/\+?\d(?:[\s.-]{0,3}\d){5,}/g, (run) => (PHONE.test(run.replace(/\D/g, "")) ? "[teléfono oculto]" : "[número oculto]"));
 }
 
 const WINDOW_MS = 60 * 60_000;
