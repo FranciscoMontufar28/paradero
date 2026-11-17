@@ -51,6 +51,8 @@ export default function CardScreen() {
     onError: (error) => {
       if (error instanceof ReadError && error.code === "off") {
         started.current = false;
+        // The Read button gives way to the "NFC is off" screen; say so, as every other failure does.
+        announce(t.card.errors.off.title);
         return setReader("off");
       }
       void Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
