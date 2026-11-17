@@ -1,8 +1,8 @@
 import BottomSheet, { BottomSheetHandle, BottomSheetScrollView, type BottomSheetHandleProps, type BottomSheetScrollViewMethods } from "@gorhom/bottom-sheet";
 import * as Haptics from "expo-haptics";
-import { router } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 import { PressableScale } from "pressto";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { BackHandler, StyleSheet, useWindowDimensions, View } from "react-native";
 import Animated, { interpolate, useAnimatedStyle, useSharedValue } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -71,15 +71,18 @@ export default function Home() {
     }
   };
 
-  // Android's back button closes the stop first, the way it would leave a stop screen.
-  useEffect(() => {
-    if (!selected) return;
-    const sub = BackHandler.addEventListener("hardwareBackPress", () => {
-      setSelected(null);
-      return true;
-    });
-    return () => sub.remove();
-  }, [selected]);
+  // Android's back button closes the stop first, the way it would leave a stop screen. Only while Home is in front:
+  // a route or report opened from the stop sits on top of Home, and Back must close that screen, not the stop under it.
+  useFocusEffect(
+    useCallback(() => {
+      if (!selected) return;
+      const sub = BackHandler.addEventListener("hardwareBackPress", () => {
+        setSelected(null);
+        return true;
+      });
+      return () => sub.remove();
+    }, [selected]),
+  );
 
   const locateStyle = useAnimatedStyle(() => ({
     transform: [{ translateY: position.value - size.control.lg - space[2] }],
