@@ -91,7 +91,7 @@ export default function RouteScreen() {
               </Text>
             </View>
 
-            {data.directions.length > 1 && (
+            {data.directions && data.directions.length > 1 && (
               <View style={styles.directions}>
                 <Text variant="eyebrow" tone="faint" nativeID="route-direction">
                   {t.route.direction}

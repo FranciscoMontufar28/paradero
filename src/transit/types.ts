@@ -102,7 +102,8 @@ export interface RouteDetail {
   patterns?: { path: [number, number][]; stops: string[] }[];
   stops: { id: string; name: string; lat: number; lon: number }[];
   /** Every direction riders can take under this code, sorted by destination. TransMilenio files each one as its own route. */
-  directions: { id: string; name: string }[];
+  /** Every direction filed under this route's code, this one included. Absent from servers before the direction switch. */
+  directions?: { id: string; name: string }[];
   buses: Bus[];
   alerts: Alert[];
 }
